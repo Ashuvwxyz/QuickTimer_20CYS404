@@ -1,16 +1,17 @@
 package com.example.quicktimer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class TimerActivity extends AppCompatActivity {
-    private EditText timerText;
+    private EditText hoursInput, minutesInput, secondsInput;
     private Button startButton, stopButton, resetButton;
     private CountDownTimer countDownTimer;
     private boolean isRunning = false;
@@ -21,38 +22,53 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
 
-        timerText = findViewById(R.id.timer_text);
+        hoursInput = findViewById(R.id.hours_input);
+        minutesInput = findViewById(R.id.minutes_input);
+        secondsInput = findViewById(R.id.seconds_input);
         startButton = findViewById(R.id.start_button);
         stopButton = findViewById(R.id.stop_button);
         resetButton = findViewById(R.id.reset_button);
+        FloatingActionButton fabSoundSettings = findViewById(R.id.fab_sound_settings);
+        FloatingActionButton fabTimerHistory = findViewById(R.id.fab_timer_history);
 
         startButton.setOnClickListener(view -> startTimer());
         stopButton.setOnClickListener(view -> stopTimer());
         resetButton.setOnClickListener(view -> resetTimer());
 
-        timerText.addTextChangedListener(new TextWatcher() {
+        fabSoundSettings.setOnClickListener(view -> {
+            Intent intent = new Intent(TimerActivity.this, SoundSettingActivity.class);
+            startActivity(intent);
+        });
+
+        fabTimerHistory.setOnClickListener(view -> {
+            Intent intent = new Intent(TimerActivity.this, TimerHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validateTimerInput(s.toString());
+                validateTimerInput();
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
-        });
+        };
+
+        hoursInput.addTextChangedListener(textWatcher);
+        minutesInput.addTextChangedListener(textWatcher);
+        secondsInput.addTextChangedListener(textWatcher);
     }
 
     private void startTimer() {
         if (isRunning) return; // Prevent multiple clicks from starting multiple timers
 
-        String[] timeParts = timerText.getText().toString().split(":");
-        if (timeParts.length != 3) return; // Ensure correct format
-
-        int hours = Integer.parseInt(timeParts[0]);
-        int minutes = Integer.parseInt(timeParts[1]);
-        int seconds = Integer.parseInt(timeParts[2]);
+        int hours = Integer.parseInt(hoursInput.getText().toString());
+        int minutes = Integer.parseInt(minutesInput.getText().toString());
+        int seconds = Integer.parseInt(secondsInput.getText().toString());
 
         timeInMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
         if (timeInMillis <= 0) return; // Ignore if time is zero
@@ -66,7 +82,7 @@ public class TimerActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                timerText.setText("00:00:00");
+                resetTimer();
                 isRunning = false;
             }
         }.start();
@@ -86,35 +102,37 @@ public class TimerActivity extends AppCompatActivity {
 
     private void resetTimer() {
         stopTimer();
-        timerText.setText("00:00:00");
+        hoursInput.setText("00");
+        minutesInput.setText("00");
+        secondsInput.setText("00");
     }
 
     private void updateTimerDisplay(long millisUntilFinished) {
         int hours = (int) (millisUntilFinished / 3600000);
         int minutes = (int) (millisUntilFinished % 3600000) / 60000;
         int seconds = (int) (millisUntilFinished % 60000) / 1000;
-        timerText.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        hoursInput.setText(String.format("%02d", hours));
+        minutesInput.setText(String.format("%02d", minutes));
+        secondsInput.setText(String.format("%02d", seconds));
     }
 
-    private void validateTimerInput(String input) {
-        String[] timeParts = input.split(":");
-        if (timeParts.length != 3) {
-            timerText.setError("Invalid format. Use HH:MM:SS");
-            return;
-        }
-
+    private void validateTimerInput() {
         try {
-            int hours = Integer.parseInt(timeParts[0]);
-            int minutes = Integer.parseInt(timeParts[1]);
-            int seconds = Integer.parseInt(timeParts[2]);
+            int hours = Integer.parseInt(hoursInput.getText().toString());
+            int minutes = Integer.parseInt(minutesInput.getText().toString());
+            int seconds = Integer.parseInt(secondsInput.getText().toString());
 
             if (minutes >= 60 || seconds >= 60) {
-                timerText.setError("Minutes and seconds must be less than 60");
+                minutesInput.setError("Minutes and seconds must be less than 60");
+                secondsInput.setError("Minutes and seconds must be less than 60");
             } else {
-                timerText.setError(null);
+                minutesInput.setError(null);
+                secondsInput.setError(null);
             }
         } catch (NumberFormatException e) {
-            timerText.setError("Invalid number format");
+            hoursInput.setError("Invalid number format");
+            minutesInput.setError("Invalid number format");
+            secondsInput.setError("Invalid number format");
         }
     }
 }

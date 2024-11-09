@@ -1,9 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:gravity="center">
+    android:padding="16dp">
 
+    <!-- Floating Action Button for Sound Settings -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_sound_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_sound"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp" />
+
+    <!-- Floating Action Button for Timer History -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_timer_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clipboard"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <!-- Title Text -->
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
@@ -11,26 +32,90 @@
         android:text="QuickTimer"
         android:textStyle="bold"
         android:textSize="24sp"
-        android:layout_centerHorizontal="true"
+        app:layout_constraintTop_toBottomOf="@id/fab_sound_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp" />
 
-    <EditText
-        android:id="@+id/timer_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00:00:00"
-        android:textSize="48sp"
-        android:inputType="number"
-        android:layout_below="@id/title_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
-
+    <!-- LinearLayout for Timer Inputs -->
     <LinearLayout
+        android:id="@+id/timer_inputs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/timer_text"
-        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_layout"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/hours_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="HH"
+            android:text="00"
+            android:textSize="48sp"
+            android:inputType="number"
+            android:maxLength="2"
+            android:gravity="center"
+            android:ems="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="48sp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/minutes_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="MM"
+            android:text="00"
+            android:textSize="48sp"
+            android:inputType="number"
+            android:maxLength="2"
+            android:gravity="center"
+            android:ems="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textSize="48sp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/seconds_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="SS"
+            android:text="00"
+            android:textSize="48sp"
+            android:inputType="number"
+            android:maxLength="2"
+            android:gravity="center"
+            android:ems="2" />
+    </LinearLayout>
+
+    <!-- Button Layout for Start, Stop, Reset -->
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/timer_inputs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="20dp">
 
         <Button
@@ -53,4 +138,4 @@
             android:text="Reset"
             android:layout_marginLeft="16dp" />
     </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
