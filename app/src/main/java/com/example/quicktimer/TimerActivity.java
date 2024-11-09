@@ -106,9 +106,17 @@ public class TimerActivity extends AppCompatActivity {
             public void onFinish() {
                 resetTimer();
                 isRunning = false;
-                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), defaultSoundUri);
-                if (ringtone != null) {
-                    ringtone.play();
+                String lastPreviewedSoundUri = sharedPreferences.getString("last_previewed_sound_uri", null);
+                if (lastPreviewedSoundUri != null) {
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse(lastPreviewedSoundUri));
+                    if (ringtone != null) {
+                        ringtone.play();
+                    }
+                } else {
+                    Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), defaultSoundUri);
+                    if (ringtone != null) {
+                        ringtone.play();
+                    }
                 }
                 Toast.makeText(TimerActivity.this, "Time's up!", Toast.LENGTH_SHORT).show();
                 restoreOriginalTime();

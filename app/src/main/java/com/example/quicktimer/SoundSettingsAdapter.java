@@ -44,6 +44,11 @@ public class SoundSettingsAdapter extends RecyclerView.Adapter<SoundSettingsAdap
                 mediaPlayer.setOnCompletionListener(MediaPlayer::release);
                 mediaPlayer.start();
             }
+
+            // Store the last previewed audio URI in SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("last_previewed_sound_uri", item.getSoundUri());
+            editor.apply();
         });
 
         holder.itemView.setOnClickListener(v -> {
