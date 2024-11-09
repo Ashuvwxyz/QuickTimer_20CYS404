@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">QuickTimer</string>
     <string name="timer_text">QuickTimer</string>
+    <string name="preview_sound">preview the audio</string>
 </resources>

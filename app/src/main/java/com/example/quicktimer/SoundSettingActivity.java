@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SoundSettingActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private SoundSettingAdapter adapter;
+    private SoundSettingsAdapter adapter;
     private SoundDatabaseHelper dbHelper;
 
     @Override
@@ -23,7 +23,7 @@ public class SoundSettingActivity extends AppCompatActivity {
 
         dbHelper = new SoundDatabaseHelper(this);
         List<SoundSettingItem> soundSettings = getSoundSettings();
-        adapter = new SoundSettingAdapter(soundSettings);
+        adapter = new SoundSettingsAdapter(soundSettings, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -32,12 +32,18 @@ public class SoundSettingActivity extends AppCompatActivity {
         Cursor cursor = dbHelper.getAllSoundValues();
 
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_ID));
-                String soundName = cursor.getString(cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_SOUND_NAME));
-                String soundUri = cursor.getString(cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_SOUND_URI));
-                soundList.add(new SoundSettingItem(id, soundName, soundUri));
-            } while (cursor.moveToNext());
+            int idIndex = cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_ID);
+            int nameIndex = cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_SOUND_NAME);
+            int uriIndex = cursor.getColumnIndex(SoundDatabaseHelper.COLUMN_SOUND_URI);
+
+            if (idIndex >= 0 && nameIndex >= 0 && uriIndex >= 0) {
+                do {
+                    int id = cursor.getInt(idIndex);
+                    String soundName = cursor.getString(nameIndex);
+                    String soundUri = cursor.getString(uriIndex);
+                    soundList.add(new SoundSettingItem(id, soundName, soundUri));
+                } while (cursor.moveToNext());
+            }
             cursor.close();
         }
 
