@@ -1,4 +1,3 @@
-// TimerHistoryActivity.java
 package com.example.quicktimer;
 
 import android.database.Cursor;
@@ -30,17 +29,14 @@ public class TimerHistoryActivity extends AppCompatActivity {
 
     private List<TimerHistoryItem> getTimerHistory() {
         List<TimerHistoryItem> historyList = new ArrayList<>();
-        Cursor cursor = dbHelper.getReadableDatabase().query(
-                "timers",
-                new String[]{"id", "timer_value"},
-                null, null, null, null, "id DESC"
-        );
+        Cursor cursor = dbHelper.getAllTimerValues();
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String timerValue = cursor.getString(cursor.getColumnIndex("timer_value"));
-                historyList.add(new TimerHistoryItem(id, timerValue));
+                int id = cursor.getInt(cursor.getColumnIndex(TimerDatabaseHelper.COLUMN_ID));
+                String systemTime = cursor.getString(cursor.getColumnIndex(TimerDatabaseHelper.COLUMN_SYSTEM_TIME));
+                String timerValue = cursor.getString(cursor.getColumnIndex(TimerDatabaseHelper.COLUMN_TIMER_VALUE));
+                historyList.add(new TimerHistoryItem(id, systemTime, timerValue));
             } while (cursor.moveToNext());
             cursor.close();
         }

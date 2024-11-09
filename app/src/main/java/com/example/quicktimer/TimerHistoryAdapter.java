@@ -26,6 +26,7 @@ public class TimerHistoryAdapter extends RecyclerView.Adapter<TimerHistoryAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TimerHistoryItem item = timerHistory.get(position);
         holder.idTextView.setText(String.valueOf(item.getId()));
+        holder.systemTimeTextView.setText(item.getSystemTime());
         holder.timerValueTextView.setText(item.getTimerValue());
     }
 
@@ -36,11 +37,13 @@ public class TimerHistoryAdapter extends RecyclerView.Adapter<TimerHistoryAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView idTextView;
+        public TextView systemTimeTextView;
         public TextView timerValueTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             idTextView = itemView.findViewById(R.id.id_text_view);
+            systemTimeTextView = itemView.findViewById(R.id.system_time_text_view);
             timerValueTextView = itemView.findViewById(R.id.timer_value_text_view);
         }
     }

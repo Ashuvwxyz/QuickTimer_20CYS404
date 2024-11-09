@@ -7,11 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class TimerDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "timers.db";
+    private static final String DATABASE_NAME = "timers1.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "timers";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_TIMER_VALUE = "timer_value";
+    public static final String TABLE_NAME = "timers";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_SYSTEM_TIME = "system_time";
+    public static final String COLUMN_TIMER_VALUE = "timer_value";
 
     public TimerDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -21,6 +22,7 @@ public class TimerDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_SYSTEM_TIME + " TEXT, " +
                 COLUMN_TIMER_VALUE + " TEXT)";
         db.execSQL(CREATE_TABLE);
     }
@@ -31,22 +33,17 @@ public class TimerDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertTimerValue(String timerValue) {
+    public void insertTimerValue(String systemTime, String timerValue) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMN_SYSTEM_TIME, systemTime);
         values.put(COLUMN_TIMER_VALUE, timerValue);
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    public String getLastTimerValue() {
+    public Cursor getAllTimerValues() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMN_TIMER_VALUE}, null, null, null, null, COLUMN_ID + " DESC", "1");
-        if (cursor != null && cursor.moveToFirst()) {
-            String timerValue = cursor.getString(cursor.getColumnIndex(COLUMN_TIMER_VALUE));
-            cursor.close();
-            return timerValue;
-        }
-        return "00:00:00";
+        return db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID + " DESC");
     }
 }

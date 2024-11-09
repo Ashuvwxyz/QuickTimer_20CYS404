@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity {
     private EditText hoursInput, minutesInput, secondsInput;
@@ -76,7 +79,8 @@ public class TimerActivity extends AppCompatActivity {
         int seconds = Integer.parseInt(secondsInput.getText().toString());
 
         originalTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        dbHelper.insertTimerValue(originalTime);
+        String systemTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        dbHelper.insertTimerValue(systemTime, originalTime);
 
         timeInMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
         if (timeInMillis <= 0) return; // Ignore if time is zero
