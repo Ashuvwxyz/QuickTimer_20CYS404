@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -16,11 +17,15 @@ public class TimerActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private boolean isRunning = false;
     private long timeInMillis;
+    private String originalTime;
+    private TimerDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        dbHelper = new TimerDatabaseHelper(this);
 
         hoursInput = findViewById(R.id.hours_input);
         minutesInput = findViewById(R.id.minutes_input);
@@ -70,6 +75,9 @@ public class TimerActivity extends AppCompatActivity {
         int minutes = Integer.parseInt(minutesInput.getText().toString());
         int seconds = Integer.parseInt(secondsInput.getText().toString());
 
+        originalTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        dbHelper.insertTimerValue(originalTime);
+
         timeInMillis = (hours * 3600 + minutes * 60 + seconds) * 1000;
         if (timeInMillis <= 0) return; // Ignore if time is zero
 
@@ -84,6 +92,8 @@ public class TimerActivity extends AppCompatActivity {
             public void onFinish() {
                 resetTimer();
                 isRunning = false;
+                Toast.makeText(TimerActivity.this, "Time's up!", Toast.LENGTH_SHORT).show();
+                restoreOriginalTime();
             }
         }.start();
 
@@ -105,6 +115,13 @@ public class TimerActivity extends AppCompatActivity {
         hoursInput.setText("00");
         minutesInput.setText("00");
         secondsInput.setText("00");
+    }
+
+    private void restoreOriginalTime() {
+        String[] timeParts = originalTime.split(":");
+        hoursInput.setText(timeParts[0]);
+        minutesInput.setText(timeParts[1]);
+        secondsInput.setText(timeParts[2]);
     }
 
     private void updateTimerDisplay(long millisUntilFinished) {
