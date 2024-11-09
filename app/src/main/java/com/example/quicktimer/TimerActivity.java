@@ -1,6 +1,9 @@
 package com.example.quicktimer;
 
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -15,6 +18,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity {
+    private Uri defaultSoundUri;
     private EditText hoursInput, minutesInput, secondsInput;
     private Button startButton, stopButton, resetButton;
     private CountDownTimer countDownTimer;
@@ -28,6 +32,7 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
 
+        defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         dbHelper = new TimerDatabaseHelper(this);
 
         hoursInput = findViewById(R.id.hours_input);
@@ -96,6 +101,10 @@ public class TimerActivity extends AppCompatActivity {
             public void onFinish() {
                 resetTimer();
                 isRunning = false;
+                Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), defaultSoundUri);
+                if (ringtone != null) {
+                    ringtone.play();
+                }
                 Toast.makeText(TimerActivity.this, "Time's up!", Toast.LENGTH_SHORT).show();
                 restoreOriginalTime();
             }

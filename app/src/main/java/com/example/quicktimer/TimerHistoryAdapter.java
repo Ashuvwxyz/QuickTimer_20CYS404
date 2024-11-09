@@ -35,6 +35,11 @@ public class TimerHistoryAdapter extends RecyclerView.Adapter<TimerHistoryAdapte
         return timerHistory.size();
     }
 
+    public void updateData(List<TimerHistoryItem> newTimerHistory) {
+        this.timerHistory = newTimerHistory;
+        notifyDataSetChanged();
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView idTextView;
         public TextView systemTimeTextView;

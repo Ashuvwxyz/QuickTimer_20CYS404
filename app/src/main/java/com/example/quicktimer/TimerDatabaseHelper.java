@@ -44,6 +44,6 @@ public class TimerDatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getAllTimerValues() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID + " DESC");
+        return db.query(TABLE_NAME, null, null, null, null, null, COLUMN_ID + " ASC");
     }
 }
