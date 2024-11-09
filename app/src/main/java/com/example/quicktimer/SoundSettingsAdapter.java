@@ -1,6 +1,7 @@
 package com.example.quicktimer;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -15,10 +16,12 @@ import java.util.List;
 public class SoundSettingsAdapter extends RecyclerView.Adapter<SoundSettingsAdapter.ViewHolder> {
     private List<SoundSettingItem> soundSettingItems;
     private Context context;
+    private SharedPreferences sharedPreferences;
 
     public SoundSettingsAdapter(List<SoundSettingItem> soundSettingItems, Context context) {
         this.soundSettingItems = soundSettingItems;
         this.context = context;
+        this.sharedPreferences = context.getSharedPreferences("QuickTimerPrefs", Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -41,6 +44,12 @@ public class SoundSettingsAdapter extends RecyclerView.Adapter<SoundSettingsAdap
                 mediaPlayer.setOnCompletionListener(MediaPlayer::release);
                 mediaPlayer.start();
             }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("selected_sound_uri", item.getSoundUri());
+            editor.apply();
         });
     }
 

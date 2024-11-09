@@ -9,7 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 
 public class SoundDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "sounds1.db";
+    private static final String DATABASE_NAME = "sounds2.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_SOUNDS = "sounds";
@@ -17,8 +17,11 @@ public class SoundDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SOUND_NAME = "sound_name";
     public static final String COLUMN_SOUND_URI = "sound_uri";
 
+    private Context context;
+
     public SoundDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -39,9 +42,9 @@ public class SoundDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private void addInbuiltSounds(SQLiteDatabase db) {
-        addSound(db, "Notification Sound 1", RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
-        addSound(db, "Notification Sound 2", RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
-        addSound(db, "Notification Sound 3", RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
+        addSound(db, "Notification Sound 1", Uri.parse("android.resource://" + context.getPackageName() + "/raw/notif1.wav").toString());
+        addSound(db, "Notification Sound 2", Uri.parse("android.resource://" + context.getPackageName() + "/raw/notif2.wav").toString());
+        addSound(db, "Default Notification Sound", RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
     }
 
     private void addSound(SQLiteDatabase db, String name, String uri) {

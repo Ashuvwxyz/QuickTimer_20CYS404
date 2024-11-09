@@ -1,6 +1,8 @@
 package com.example.quicktimer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity {
+    private SharedPreferences sharedPreferences;
     private Uri defaultSoundUri;
     private EditText hoursInput, minutesInput, secondsInput;
     private Button startButton, stopButton, resetButton;
@@ -31,6 +34,8 @@ public class TimerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        sharedPreferences = getSharedPreferences("QuickTimerPrefs", Context.MODE_PRIVATE);
 
         defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         dbHelper = new TimerDatabaseHelper(this);
